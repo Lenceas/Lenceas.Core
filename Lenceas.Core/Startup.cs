@@ -1,3 +1,4 @@
+using Autofac;
 using Lenceas.Core.Common;
 using Lenceas.Core.Extensions;
 using Lenceas.Core.Model;
@@ -45,6 +46,12 @@ namespace Lenceas.Core
                 });
 
             _services = services;
+        }
+
+        // AutoFac
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterModule(new AutofacModuleRegister());
         }
 
         // 运行时将调用此方法。 使用此方法来配置HTTP请求管道。

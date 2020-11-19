@@ -58,7 +58,6 @@ namespace Lenceas.Core.Controllers
             else
             {
                 r.msg = "未匹配到数据";
-                r.status = 404;
                 r.success = false;
             }
             return r;
@@ -72,7 +71,7 @@ namespace Lenceas.Core.Controllers
             var entity = new Test(model.Name);
             try
             {
-                r.success = await _testServices.Insert(entity) == 1;
+                r.success = await _testServices.Insert(entity) > 0;
                 r.msg = r.success ? "添加成功" : "添加失败";
             }
             catch (Exception ex)
@@ -108,7 +107,7 @@ namespace Lenceas.Core.Controllers
             entity.Name = model.Name;
             try
             {
-                r.success = await _testServices.Update(entity) == 1;
+                r.success = await _testServices.Update(entity) > 0;
                 r.msg = r.success ? "更新成功" : "更新失败";
             }
             catch (Exception ex)
@@ -134,8 +133,8 @@ namespace Lenceas.Core.Controllers
             {
                 try
                 {
-                    r.success = await _testServices.Delete(t => t.Id == id) == 1;
-                    r.msg = r.success ? "删除成功" : "删除失败";
+                    r.success = await _testServices.Delete(t => t.Id == id) > 0;
+                    r.msg = !r.success ? "删除成功" : "删除失败";
                 }
                 catch (Exception ex)
                 {
