@@ -28,6 +28,7 @@ namespace Lenceas.Core
             services.AddSingleton(new AppSettings(Configuration));
 
             services.AddDbSetup();
+            services.AddAutoMapperSetup();
             services.AddSwaggerSetup();
 
             services.AddControllers()
