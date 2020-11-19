@@ -1,5 +1,6 @@
 using Lenceas.Core.Common;
 using Lenceas.Core.Extensions;
+using Lenceas.Core.Model;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -32,7 +33,7 @@ namespace Lenceas.Core
         }
 
         // 运行时将调用此方法。 使用此方法来配置HTTP请求管道。
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, MySqlContext mySqlContext)
         {
             // 开发环境
             if (env.IsDevelopment())
@@ -50,6 +51,8 @@ namespace Lenceas.Core
             {
                 endpoints.MapControllers();
             });
+            // 生成种子数据
+            app.UseSeedDataMildd(mySqlContext, Env.WebRootPath);
         }
     }
 }
