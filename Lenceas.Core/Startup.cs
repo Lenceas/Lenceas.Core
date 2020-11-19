@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Lenceas.Core
 {
@@ -26,8 +28,20 @@ namespace Lenceas.Core
             services.AddSingleton(new AppSettings(Configuration));
 
             services.AddDbSetup();
+            services.AddSwaggerSetup();
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddNewtonsoftJson(options =>
+                {
+                    //忽略循环引用
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                    //不使用驼峰样式的key
+                    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                    //设置时间格式
+                    options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
+                    //忽略Model中为null的属性
+                    //options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                });
 
             _services = services;
         }
@@ -40,6 +54,13 @@ namespace Lenceas.Core
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                app.UseHsts();
+            }
+            // 封装Swagger展示
+            app.UseSwaggerMildd();
             // Https
             app.UseHttpsRedirection();
             // 路由
