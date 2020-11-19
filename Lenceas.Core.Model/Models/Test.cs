@@ -10,12 +10,24 @@ namespace Lenceas.Core.Model
     /// </summary>
     public class Test : BaseEntity
     {
+        public Test()
+        {
+            Name = string.Empty;
+            CreateTime = DateTime.Now.ToLocalTime();
+        }
+
+        public Test(string name)
+        {
+            Name = name;
+            CreateTime = DateTime.Now.ToLocalTime();
+        }
+
         /// <summary>
         /// 名称
         /// </summary>
         [Column(TypeName = "varchar(255)")]
         [Required]
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; set; }
 
         /// <summary>
         /// 创建时间

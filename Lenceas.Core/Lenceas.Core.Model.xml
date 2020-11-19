@@ -4,6 +4,31 @@
         <name>Lenceas.Core.Model</name>
     </assembly>
     <members>
+        <member name="T:Lenceas.Core.Model.ApiResult`1">
+            <summary>
+            Api通用返回信息类
+            </summary>
+        </member>
+        <member name="P:Lenceas.Core.Model.ApiResult`1.status">
+            <summary>
+            状态码
+            </summary>
+        </member>
+        <member name="P:Lenceas.Core.Model.ApiResult`1.success">
+            <summary>
+            操作是否成功
+            </summary>
+        </member>
+        <member name="P:Lenceas.Core.Model.ApiResult`1.msg">
+            <summary>
+            返回信息
+            </summary>
+        </member>
+        <member name="P:Lenceas.Core.Model.ApiResult`1.data">
+            <summary>
+            返回数据集合
+            </summary>
+        </member>
         <member name="P:Lenceas.Core.Model.BaseEntity.Id">
             <summary>
             主键
@@ -31,6 +56,21 @@
             <param name="mySqlContext"></param>
             <param name="WebRootPath"></param>
             <returns></returns>
+        </member>
+        <member name="T:Lenceas.Core.Model.TestViewModels">
+            <summary>
+            测试信息展示类
+            </summary>
+        </member>
+        <member name="P:Lenceas.Core.Model.TestViewModels.Id">
+            <summary>
+            主键
+            </summary>
+        </member>
+        <member name="P:Lenceas.Core.Model.TestViewModels.Name">
+            <summary>
+            名称 
+            </summary>
         </member>
     </members>
 </doc>

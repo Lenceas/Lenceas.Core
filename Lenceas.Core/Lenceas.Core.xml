@@ -4,5 +4,61 @@
         <name>Lenceas.Core</name>
     </assembly>
     <members>
+        <member name="T:Lenceas.Core.Controllers.TestController">
+            <summary>
+            测试接口
+            </summary>
+        </member>
+        <member name="M:Lenceas.Core.Controllers.TestController.Get">
+            <summary>
+            查询列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Lenceas.Core.Controllers.TestController.Get(System.Int64)">
+            <summary>
+            查询单条
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Lenceas.Core.Controllers.TestController.Update(System.Int64,Lenceas.Core.Model.TestViewModels)">
+            <summary>
+            更新
+            </summary>
+            <param name="id"></param>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Lenceas.Core.Controllers.TestController.Delete(System.Int64)">
+            <summary>
+            删除
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Lenceas.Core.CustomRouteAttribute">
+            <summary>
+            自定义路由 /api/{version}/[controler]/[action]
+            </summary>
+        </member>
+        <member name="P:Lenceas.Core.CustomRouteAttribute.GroupName">
+            <summary>
+            分组名称,是来实现接口 IApiDescriptionGroupNameProvider
+            </summary>
+        </member>
+        <member name="M:Lenceas.Core.CustomRouteAttribute.#ctor(System.String)">
+            <summary>
+            自定义路由构造函数，继承基类路由
+            </summary>
+            <param name="actionName"></param>
+        </member>
+        <member name="M:Lenceas.Core.CustomRouteAttribute.#ctor(Lenceas.Core.Extensions.CustomApiVersion.ApiVersions,System.String)">
+            <summary>
+            自定义版本+路由构造函数，继承基类路由
+            </summary>
+            <param name="actionName"></param>
+            <param name="version"></param>
+        </member>
     </members>
 </doc>
