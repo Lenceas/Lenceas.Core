@@ -6,7 +6,7 @@ namespace Lenceas.Core.Services
 {
     public class TestServices : BaseServices<Test>, ITestServices
     {
-        public TestServices(IUnitOfWork unitOfWork, IBaseRepository<Test> currentRepository) : base(unitOfWork, currentRepository)
+        public TestServices(IBaseRepository<Test> baseDal) : base(baseDal)
         {
         }
     }

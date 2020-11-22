@@ -10,77 +10,119 @@ using Z.EntityFramework.Plus;
 
 namespace Lenceas.Core.Repository
 {
-    public class BaseRepository<T> : IBaseRepository<T> where T : class, new()
+    public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
     {
+        #region 构造函数
+        protected IUnitOfWork unitOfWork;
         private readonly MySqlContext _context;
-
-        public BaseRepository(MySqlContext context)
+        private readonly DbSet<T> _dbSet;
+        public BaseRepository(MySqlContext context, IUnitOfWork unitOfWork)
         {
             _context = context;
+            _dbSet = _context.Set<T>();
+            this.unitOfWork = unitOfWork;
         }
+        #endregion
 
-        public async ValueTask<EntityEntry<T>> Insert(T entity)
+        #region 是否存在
+        public async Task<bool> IsExist(long id)
         {
-            return await _context.Set<T>().AddAsync(entity);
+            return await this.GetById(id) != null;
         }
-
-        public void Update(T entity)
-        {
-            _context.Set<T>().Update(entity);
-        }
-
-        public async Task<int> Update(Expression<Func<T, bool>> whereLambda, Expression<Func<T, T>> entity)
-        {
-            return await _context.Set<T>().Where(whereLambda).UpdateAsync(entity);
-        }
-
-        public async Task<int> Delete(Expression<Func<T, bool>> whereLambda)
-        {
-            return await _context.Set<T>().Where(whereLambda).DeleteAsync();
-        }
-
         public async Task<bool> IsExist(Expression<Func<T, bool>> whereLambda)
         {
-            return await _context.Set<T>().AnyAsync(whereLambda);
+            return await _dbSet.AnyAsync(whereLambda);
+        }
+        #endregion
+
+        #region 查询
+        public async Task<T> GetById(long id)
+        {
+            return await _dbSet.AsNoTracking().FirstOrDefaultAsync(t => t.Id == id);
+        }
+
+        public async Task<List<T>> GetByIds(List<long> ids)
+        {
+            return await _dbSet.AsNoTracking().WhereBulkContains(ids).ToListAsync();
         }
 
         public async Task<T> GetEntity(Expression<Func<T, bool>> whereLambda)
         {
-            return await _context.Set<T>().AsNoTracking().FirstOrDefaultAsync(whereLambda);
+            return await _dbSet.AsNoTracking().FirstOrDefaultAsync(whereLambda);
         }
 
-        public async Task<List<T>> Select()
+        public async Task<List<T>> GetList()
         {
-            return await _context.Set<T>().ToListAsync();
+            return await _dbSet.ToListAsync();
         }
 
-        public async Task<List<T>> Select(Expression<Func<T, bool>> whereLambda)
+        public async Task<List<T>> GetList(Expression<Func<T, bool>> whereLambda)
         {
-            return await _context.Set<T>().Where(whereLambda).ToListAsync();
+            return await _dbSet.Where(whereLambda).ToListAsync();
         }
+        #endregion
 
-        public async Task<Tuple<List<T>, int>> Select<S>(int pageSize, int pageIndex, Expression<Func<T, bool>> whereLambda, Expression<Func<T, S>> orderByLambda, bool isAsc)
+        #region 增加
+        public async Task<int> AddAsync(T entity)
         {
-            var total = await _context.Set<T>().Where(whereLambda).CountAsync();
-
-            if (isAsc)
-            {
-                var entities = await _context.Set<T>().Where(whereLambda)
-                                      .OrderBy<T, S>(orderByLambda)
-                                      .Skip(pageSize * (pageIndex - 1))
-                                      .Take(pageSize).ToListAsync();
-
-                return new Tuple<List<T>, int>(entities, total);
-            }
-            else
-            {
-                var entities = await _context.Set<T>().Where(whereLambda)
-                                      .OrderByDescending<T, S>(orderByLambda)
-                                      .Skip(pageSize * (pageIndex - 1))
-                                      .Take(pageSize).ToListAsync();
-
-                return new Tuple<List<T>, int>(entities, total);
-            }
+            await _dbSet.AddAsync(entity);
+            return await unitOfWork.SaveChangesAsync();
         }
+        public async Task<int> AddBulkAsync(List<T> entities)
+        {
+            await _dbSet.BulkInsertAsync(entities);
+            return await unitOfWork.SaveChangesAsync();
+        }
+        #endregion
+
+        #region 修改
+        public async Task<int> UpdateAsync(Expression<Func<T, bool>> whereLambda, Expression<Func<T, T>> entity)
+        {
+            await _dbSet.Where(whereLambda).UpdateAsync(entity);
+            return await unitOfWork.SaveChangesAsync();
+        }
+        public async Task<int> UpdateBulkAsync(List<T> entities)
+        {
+            await _dbSet.BulkUpdateAsync(entities);
+            return await unitOfWork.SaveChangesAsync();
+        }
+        #endregion
+
+        #region 删除
+        public async Task<int> DeleteById(long id)
+        {
+            await _dbSet.Where(t => t.Id == id).DeleteAsync();
+            await unitOfWork.SaveChangesAsync();
+            return await this.IsExist(id) ? 0 : 1;
+        }
+        public async Task<int> DeleteByIds(List<long> ids)
+        {
+            var eneities = await this.GetByIds(ids);
+            await this.DeletesAsync(eneities);
+            await unitOfWork.SaveChangesAsync();
+            eneities = await this.GetByIds(ids);
+            return eneities.Count == 0 ? eneities.Count : 0;
+        }
+        public async Task<int> DeleteAsync(T entity)
+        {
+            await _dbSet.DeleteAsync();
+            await unitOfWork.SaveChangesAsync();
+            return await this.IsExist(entity.Id) ? 0 : 1;
+        }
+        public async Task<int> DeletesAsync(List<T> entities)
+        {
+            await _dbSet.BulkDeleteAsync(entities);
+            await unitOfWork.SaveChangesAsync();
+            var newEntities = await this.GetByIds(entities.Select(t => t.Id).ToList());
+            return newEntities.Count == 0 ? newEntities.Count : 0;
+        }
+        public async Task<int> DeleteAsync(Expression<Func<T, bool>> whereLambda)
+        {
+            await _dbSet.Where(whereLambda).DeleteAsync();
+            await unitOfWork.SaveChangesAsync();
+            var entities = await this.GetList(whereLambda);
+            return entities.Count == 0 ? entities.Count : 0;
+        }
+        #endregion
     }
 }

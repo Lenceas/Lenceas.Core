@@ -5,8 +5,6 @@ namespace Lenceas.Core.Repository
 {
     public interface IUnitOfWork
     {
-        MySqlContext GetDbContext();
-
         Task<int> SaveChangesAsync();
     }
 }

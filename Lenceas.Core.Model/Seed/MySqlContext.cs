@@ -1,14 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Lenceas.Core.Model
 {
     public class MySqlContext : DbContext
     {
-        public MySqlContext()
-        {
-        }
-
         public MySqlContext(DbContextOptions<MySqlContext> options) : base(options)
         {
         }
@@ -26,8 +25,13 @@ namespace Lenceas.Core.Model
             modelBuilder.Entity<Test>(entity =>
             {
                 entity.HasKey(e => e.Id).HasName("PRIMARY");
-                entity.ToTable("Test");
             });
+            base.OnModelCreating(modelBuilder);
+        }
+
+        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+        {
+            return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }
 
         private static string DifDBConnOfSecurity(params string[] conn)

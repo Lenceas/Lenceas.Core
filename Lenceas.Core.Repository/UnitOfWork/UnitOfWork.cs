@@ -12,11 +12,6 @@ namespace Lenceas.Core.Repository
             _context = context;
         }
 
-        public MySqlContext GetDbContext()
-        {
-            return _context;
-        }
-
         public async Task<int> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync();

@@ -17,6 +17,7 @@ namespace Lenceas.Core.Controllers
     [CustomRoute(ApiVersions.v1)]
     public class TestController : ControllerBase
     {
+        #region 构造函数
         private readonly ITestServices _testServices;
         private readonly IMapper _mapper;
 
@@ -25,19 +26,29 @@ namespace Lenceas.Core.Controllers
             _testServices = testServices;
             _mapper = mapper;
         }
+        #endregion
 
+        #region CRUD
         /// <summary>
         /// 查询列表
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        public async Task<ApiResult<List<TestViewModels>>> Get()
+        [HttpGet("GetList")]
+        public async Task<ApiResult<List<TestViewModels>>> GetList()
         {
-            return new ApiResult<List<TestViewModels>>()
+            var r = new ApiResult<List<TestViewModels>>();
+            try
             {
-                msg = "查询成功",
-                data = _mapper.Map<List<TestViewModels>>(await _testServices.Select())
-            };
+                r.msg = "查询成功";
+                r.data = _mapper.Map<List<TestViewModels>>(await _testServices.GetList());
+            }
+            catch (Exception ex)
+            {
+                r.success = false;
+                r.status = 500;
+                r.msg = ex.Message;
+            }
+            return r;
         }
 
         /// <summary>
@@ -46,32 +57,45 @@ namespace Lenceas.Core.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public async Task<ApiResult<TestViewModels>> Get(long id = 0)
+        public async Task<ApiResult<TestViewModels>> GetById(long id)
         {
             var r = new ApiResult<TestViewModels>();
-            var entity = await _testServices.GetEntity(t => t.Id == id);
-            if (entity != null)
+            try
             {
-                r.msg = "查询成功";
-                r.data = _mapper.Map<TestViewModels>(entity);
+                var entity = await _testServices.GetById(id);
+                if (entity != null)
+                {
+                    r.msg = "查询成功";
+                    r.data = _mapper.Map<TestViewModels>(entity);
+                }
+                else
+                {
+                    r.msg = "未匹配到数据";
+                    r.success = false;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                r.msg = "未匹配到数据";
                 r.success = false;
+                r.status = 500;
+                r.msg = ex.Message;
             }
             return r;
         }
 
-        // POST api/<TestController>
+        /// <summary>
+        /// 增加
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ApiResult<string>> Add([FromBody] TestViewModels model)
         {
             var r = new ApiResult<string>();
-            var entity = new Test(model.Name);
             try
             {
-                r.success = await _testServices.Insert(entity) > 0;
+                var entity = new Test(model.Name);
+                r.success = await _testServices.AddAsync(entity) > 0;
                 r.msg = r.success ? "添加成功" : "添加失败";
             }
             catch (Exception ex)
@@ -98,16 +122,15 @@ namespace Lenceas.Core.Controllers
                 r.msg = "传入Id与实体Id不一致";
                 return r;
             }
-            var entity = await _testServices.GetEntity(t => t.Id == id);
-            if (entity == null)
+            var isExist = await _testServices.IsExist(id);
+            if (!isExist)
             {
                 r.msg = "未匹配到数据";
                 return r;
             }
-            entity.Name = model.Name;
             try
             {
-                r.success = await _testServices.Update(entity) > 0;
+                r.success = await _testServices.UpdateAsync(t => t.Id == id, t => new Test() { Name = model.Name }) == 0;
                 r.msg = r.success ? "更新成功" : "更新失败";
             }
             catch (Exception ex)
@@ -125,30 +148,31 @@ namespace Lenceas.Core.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        public async Task<ApiResult<string>> Delete(long id = 0)
+        public async Task<ApiResult<string>> Delete(long id)
         {
             var r = new ApiResult<string>();
-            var entity = await _testServices.GetEntity(t => t.Id == id);
-            if (entity != null)
+            var isExist = await _testServices.IsExist(id);
+            try
             {
-                try
+                if (isExist)
                 {
-                    r.success = await _testServices.Delete(t => t.Id == id) > 0;
-                    r.msg = !r.success ? "删除成功" : "删除失败";
+                    r.success = await _testServices.DeleteById(id) > 0;
+                    r.msg = r.success ? "删除成功" : "删除失败";
                 }
-                catch (Exception ex)
+                else
                 {
+                    r.msg = "未匹配到数据";
                     r.success = false;
-                    r.status = 500;
-                    r.msg = ex.Message;
                 }
             }
-            else
+            catch (Exception ex)
             {
-                r.msg = "未匹配到数据";
                 r.success = false;
+                r.status = 500;
+                r.msg = ex.Message;
             }
             return r;
         }
+        #endregion
     }
 }

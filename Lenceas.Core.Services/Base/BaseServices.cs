@@ -1,4 +1,5 @@
-﻿using Lenceas.Core.Repository;
+﻿using Lenceas.Core.IServices;
+using Lenceas.Core.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -6,64 +7,97 @@ using System.Threading.Tasks;
 
 namespace Lenceas.Core.Services
 {
-    public class BaseServices<T> where T : class, new()
+    public class BaseServices<T> : IBaseServices<T> where T : class, new()
     {
-        protected IUnitOfWork unitOfWork;
-        protected IBaseRepository<T> currentRepository;
-
-        public BaseServices(IUnitOfWork unitOfWork, IBaseRepository<T> currentRepository)
+        #region 构造函数
+        public IBaseRepository<T> BaseDal;
+        public BaseServices(IBaseRepository<T> baseDal)
         {
-            this.unitOfWork = unitOfWork;
-            this.currentRepository = currentRepository;
+            BaseDal = baseDal;
         }
+        #endregion
 
-        public async Task<int> Insert(T entity)
+        #region 是否存在
+        public async Task<bool> IsExist(long id)
         {
-            await currentRepository.Insert(entity);
-            return await unitOfWork.SaveChangesAsync();
+            return await BaseDal.IsExist(id);
         }
-
-        public async Task<int> Update(T entity)
-        {
-            currentRepository.Update(entity);
-            return await unitOfWork.SaveChangesAsync();
-        }
-
-        public async Task<int> Update(Expression<Func<T, bool>> whereLambda, Expression<Func<T, T>> entity)
-        {
-            await currentRepository.Update(whereLambda, entity);
-            return await unitOfWork.SaveChangesAsync();
-        }
-
-        public async Task<int> Delete(Expression<Func<T, bool>> whereLambda)
-        {
-            await currentRepository.Delete(whereLambda);
-            return await unitOfWork.SaveChangesAsync();
-        }
-
         public async Task<bool> IsExist(Expression<Func<T, bool>> whereLambda)
         {
-            return await currentRepository.IsExist(whereLambda);
+            return await BaseDal.IsExist(whereLambda);
+        }
+        #endregion
+
+        #region 查询
+        public async Task<T> GetById(long id)
+        {
+            return await BaseDal.GetById(id);
+        }
+
+        public async Task<List<T>> GetByIds(List<long> ids)
+        {
+            return await BaseDal.GetByIds(ids);
         }
 
         public async Task<T> GetEntity(Expression<Func<T, bool>> whereLambda)
         {
-            return await currentRepository.GetEntity(whereLambda);
+            return await BaseDal.GetEntity(whereLambda);
         }
 
-        public async Task<List<T>> Select()
+        public async Task<List<T>> GetList()
         {
-            return await currentRepository.Select();
+            return await BaseDal.GetList();
         }
 
-        public async Task<List<T>> Select(Expression<Func<T, bool>> whereLambda)
+        public async Task<List<T>> GetList(Expression<Func<T, bool>> whereLambda)
         {
-            return await currentRepository.Select(whereLambda);
+            return await BaseDal.GetList(whereLambda);
         }
+        #endregion
 
-        public async Task<Tuple<List<T>, int>> Select<S>(int pageSize, int pageIndex, Expression<Func<T, bool>> whereLambda, Expression<Func<T, S>> orderByLambda, bool isAsc)
+        #region 增加
+        public async Task<int> AddAsync(T entity)
         {
-            return await currentRepository.Select(pageSize, pageIndex, whereLambda, orderByLambda, isAsc);
+            return await BaseDal.AddAsync(entity);
         }
+        public async Task<int> AddBulkAsync(List<T> entities)
+        {
+            return await BaseDal.AddBulkAsync(entities);
+        }
+        #endregion
+
+        #region 修改
+        public async Task<int> UpdateAsync(Expression<Func<T, bool>> whereLambda, Expression<Func<T, T>> entity)
+        {
+            return await BaseDal.UpdateAsync(whereLambda, entity);
+        }
+        public async Task<int> UpdateBulkAsync(List<T> entities)
+        {
+            return await BaseDal.UpdateBulkAsync(entities);
+        }
+        #endregion
+
+        #region 删除
+        public async Task<int> DeleteById(long id)
+        {
+            return await BaseDal.DeleteById(id);
+        }
+        public async Task<int> DeleteByIds(List<long> ids)
+        {
+            return await BaseDal.DeleteByIds(ids);
+        }
+        public async Task<int> DeleteAsync(T entity)
+        {
+            return await BaseDal.DeleteAsync(entity);
+        }
+        public async Task<int> DeletesAsync(List<T> entities)
+        {
+            return await BaseDal.DeletesAsync(entities);
+        }
+        public async Task<int> DeleteAsync(Expression<Func<T, bool>> whereLambda)
+        {
+            return await BaseDal.DeleteAsync(whereLambda);
+        }
+        #endregion
     }
 }

@@ -9,17 +9,24 @@
             测试接口
             </summary>
         </member>
-        <member name="M:Lenceas.Core.Controllers.TestController.Get">
+        <member name="M:Lenceas.Core.Controllers.TestController.GetList">
             <summary>
             查询列表
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Lenceas.Core.Controllers.TestController.Get(System.Int64)">
+        <member name="M:Lenceas.Core.Controllers.TestController.GetById(System.Int64)">
             <summary>
             查询单条
             </summary>
             <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Lenceas.Core.Controllers.TestController.Add(Lenceas.Core.Model.TestViewModels)">
+            <summary>
+            增加
+            </summary>
+            <param name="model"></param>
             <returns></returns>
         </member>
         <member name="M:Lenceas.Core.Controllers.TestController.Update(System.Int64,Lenceas.Core.Model.TestViewModels)">

@@ -7,22 +7,35 @@ namespace Lenceas.Core.IServices
 {
     public interface IBaseServices<T> where T : class, new()
     {
-        Task<int> Insert(T entity);
-
-        Task<int> Update(T entity);
-
-        Task<int> Update(Expression<Func<T, bool>> whereLambda, Expression<Func<T, T>> entity);
-
-        Task<int> Delete(Expression<Func<T, bool>> whereLambda);
-
+        #region 是否存在
+        Task<bool> IsExist(long id);
         Task<bool> IsExist(Expression<Func<T, bool>> whereLambda);
+        #endregion
 
+        #region 查询
+        Task<T> GetById(long id);
+        Task<List<T>> GetByIds(List<long> ids);
         Task<T> GetEntity(Expression<Func<T, bool>> whereLambda);
+        Task<List<T>> GetList();
+        Task<List<T>> GetList(Expression<Func<T, bool>> whereLambda);
+        #endregion
 
-        Task<List<T>> Select();
+        #region 增加
+        Task<int> AddAsync(T entity);
+        Task<int> AddBulkAsync(List<T> entities);
+        #endregion
 
-        Task<List<T>> Select(Expression<Func<T, bool>> whereLambda);
+        #region 修改
+        Task<int> UpdateAsync(Expression<Func<T, bool>> whereLambda, Expression<Func<T, T>> entity);
+        Task<int> UpdateBulkAsync(List<T> entities);
+        #endregion
 
-        Task<Tuple<List<T>, int>> Select<S>(int pageSize, int pageIndex, Expression<Func<T, bool>> whereLambda, Expression<Func<T, S>> orderByLambda, bool isAsc);
+        #region 删除
+        Task<int> DeleteById(long id);
+        Task<int> DeleteByIds(List<long> ids);
+        Task<int> DeleteAsync(T entity);
+        Task<int> DeletesAsync(List<T> entities);
+        Task<int> DeleteAsync(Expression<Func<T, bool>> whereLambda);
+        #endregion
     }
 }
