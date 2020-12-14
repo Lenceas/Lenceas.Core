@@ -101,7 +101,7 @@ namespace Lenceas.Core.Repository
             await this.DeletesAsync(eneities);
             await unitOfWork.SaveChangesAsync();
             eneities = await this.GetByIds(ids);
-            return eneities.Count == 0 ? eneities.Count : 0;
+            return eneities.Count == 0 ? ids.Count : 0;
         }
         public async Task<int> DeleteAsync(T entity)
         {
@@ -114,14 +114,14 @@ namespace Lenceas.Core.Repository
             await _dbSet.BulkDeleteAsync(entities);
             await unitOfWork.SaveChangesAsync();
             var newEntities = await this.GetByIds(entities.Select(t => t.Id).ToList());
-            return newEntities.Count == 0 ? newEntities.Count : 0;
+            return newEntities.Count == 0 ? entities.Count : 0;
         }
         public async Task<int> DeleteAsync(Expression<Func<T, bool>> whereLambda)
         {
             await _dbSet.Where(whereLambda).DeleteAsync();
             await unitOfWork.SaveChangesAsync();
             var entities = await this.GetList(whereLambda);
-            return entities.Count == 0 ? entities.Count : 0;
+            return entities.Count == 0 ? 1 : 0;
         }
         #endregion
     }

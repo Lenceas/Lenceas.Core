@@ -12,7 +12,7 @@ namespace Lenceas.Core.Model
         {
         }
 
-        public virtual DbSet<Test> Tests { get; set; }
+        public virtual DbSet<Test> test { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
