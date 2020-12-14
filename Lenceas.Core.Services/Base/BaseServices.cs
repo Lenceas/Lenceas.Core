@@ -1,4 +1,5 @@
 ﻿using Lenceas.Core.IServices;
+using Lenceas.Core.Model;
 using Lenceas.Core.Repository;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,18 @@ namespace Lenceas.Core.Services
         public async Task<bool> IsExist(Expression<Func<T, bool>> whereLambda)
         {
             return await BaseDal.IsExist(whereLambda);
+        }
+        #endregion
+
+        #region 分页查询
+        public async Task<PageDataSet<T>> GetPage(int pageIndex, int pageSize)
+        {
+            return await BaseDal.GetPage(pageIndex, pageSize);
+        }
+
+        public async Task<PageDataSet<T>> GetPage(int pageIndex, int pageSize, Expression<Func<T, bool>> whereLambda)
+        {
+            return await BaseDal.GetPage(pageIndex, pageSize, whereLambda);
         }
         #endregion
 

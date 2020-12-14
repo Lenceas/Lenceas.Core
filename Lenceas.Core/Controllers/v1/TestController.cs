@@ -4,6 +4,7 @@ using Lenceas.Core.Model;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using static Lenceas.Core.Extensions.CustomApiVersion;
 
@@ -29,6 +30,46 @@ namespace Lenceas.Core.Controllers
         #endregion
 
         #region CRUD
+        /// <summary>
+        /// 分页获取数据
+        /// </summary>
+        /// <param name="pageIndex">当前页数</param>
+        /// <param name="pageSize">分页大小</param>
+        /// <returns></returns>
+        [HttpGet("GetPage")]
+        public async Task<ApiResult<PageDataSet<TestViewModels>>> GetPage(int? pageIndex, int? pageSize)
+        {
+            var r = new ApiResult<PageDataSet<TestViewModels>>();
+            if (pageIndex <= 0 || pageSize <= 0)
+            {
+                r.msg = "pageIndex或pageSize不能小于等于0！";
+                return r;
+            }
+            try
+            {
+                var pageDataSet = await _testServices.GetPage(pageIndex ?? 1, pageSize ?? 10);
+                var data = new PageDataSet<TestViewModels>()
+                {
+                    PageIndex = pageDataSet.PageIndex,
+                    PageSize = pageDataSet.PageSize,
+                    TotalPages = pageDataSet.TotalPages,
+                    TotalRecords = pageDataSet.TotalRecords,
+                    HasPreviousPage = pageDataSet.HasPreviousPage,
+                    HasNextPage = pageDataSet.HasNextPage,
+                    ViewModelList = _mapper.Map<IEnumerable<TestViewModels>>(pageDataSet.ViewModelList)
+                };
+                r.msg = "查询成功";
+                r.data = data;
+            }
+            catch (Exception ex)
+            {
+                r.success = false;
+                r.status = 500;
+                r.msg = ex.Message;
+            }
+            return r;
+        }
+
         /// <summary>
         /// 查询列表
         /// </summary>
@@ -71,7 +112,6 @@ namespace Lenceas.Core.Controllers
                 else
                 {
                     r.msg = "未匹配到数据";
-                    r.success = false;
                 }
             }
             catch (Exception ex)

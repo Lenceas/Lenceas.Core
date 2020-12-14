@@ -49,6 +49,47 @@
             创建时间
             </summary>
         </member>
+        <member name="T:Lenceas.Core.Model.PageDataSet`1">
+            <summary>
+            通用分页数据类（默认每页10条记录）
+            </summary>
+            <typeparam name="T">分页数据的实体类型</typeparam>
+        </member>
+        <member name="P:Lenceas.Core.Model.PageDataSet`1.PageIndex">
+            <summary>
+            当前页数(从1计数）
+            </summary>
+        </member>
+        <member name="P:Lenceas.Core.Model.PageDataSet`1.PageSize">
+            <summary>
+            分页大小
+            </summary>
+        </member>
+        <member name="P:Lenceas.Core.Model.PageDataSet`1.TotalPages">
+            <summary>
+            总页数
+            </summary>
+        </member>
+        <member name="P:Lenceas.Core.Model.PageDataSet`1.TotalRecords">
+            <summary>
+            总记录条数
+            </summary>
+        </member>
+        <member name="P:Lenceas.Core.Model.PageDataSet`1.HasPreviousPage">
+            <summary>
+            是否有上一页
+            </summary>
+        </member>
+        <member name="P:Lenceas.Core.Model.PageDataSet`1.HasNextPage">
+            <summary>
+            是否有下一页
+            </summary>
+        </member>
+        <member name="P:Lenceas.Core.Model.PageDataSet`1.ViewModelList">
+            <summary>
+            返回数据
+            </summary>
+        </member>
         <member name="M:Lenceas.Core.Model.DBSeed.SeedAsyncByEFCore(Lenceas.Core.Model.MySqlContext,System.String)">
             <summary>
             异步添加种子数据 EF Core

@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+﻿using Lenceas.Core.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -11,6 +11,11 @@ namespace Lenceas.Core.Repository
         #region 是否存在
         Task<bool> IsExist(long id);
         Task<bool> IsExist(Expression<Func<T, bool>> whereLambda);
+        #endregion
+
+        #region 分页查询
+        Task<PageDataSet<T>> GetPage(int pageIndex, int pageSize);
+        Task<PageDataSet<T>> GetPage(int pageIndex, int pageSize, Expression<Func<T, bool>> whereLambda);
         #endregion
 
         #region 查询

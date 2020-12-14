@@ -1,6 +1,5 @@
 ﻿using Lenceas.Core.Model;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +32,25 @@ namespace Lenceas.Core.Repository
         {
             return await _dbSet.AnyAsync(whereLambda);
         }
+        #endregion
+
+        #region 分页查询
+        public async Task<PageDataSet<T>> GetPage(int pageIndex, int pageSize)
+        {
+            var entities = await this.GetList();
+            var totalRecords = entities.Count;
+            var items = entities.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
+            return new PageDataSet<T>(items, totalRecords, pageIndex, pageSize);
+        }
+
+        public async Task<PageDataSet<T>> GetPage(int pageIndex, int pageSize, Expression<Func<T, bool>> whereLambda)
+        {
+            var entities = await this.GetList(whereLambda);
+            var totalRecords = entities.Count;
+            var items = entities.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
+            return new PageDataSet<T>(items, totalRecords, pageIndex, pageSize);
+        }
+
         #endregion
 
         #region 查询
