@@ -39,7 +39,7 @@ namespace Lenceas.Core.Model
                     Console.WriteLine();
                 }
 
-                Console.WriteLine("开始创建表...");
+                Console.WriteLine("开始初始化数据...");
 
                 if (AppSettings.app(new string[] { "AppSettings", "SeedDBData" }).ObjToBool())
                 {
@@ -64,15 +64,16 @@ namespace Lenceas.Core.Model
                     {
                         await mySqlContext.test.AddRangeAsync(JsonHelper.ParseFormByJson<List<Test>>(FileHelper.ReadFile(string.Format(WebRootPath + SeedDataFolder, "test"), Encoding.UTF8)));
                         await mySqlContext.SaveChangesAsync();
-                        Console.WriteLine("表 test 创建成功!");
+                        Console.WriteLine("表 test 数据初始化成功!");
                     }
                     else
                     {
-                        Console.WriteLine("表 test 已经存在!");
+                        Console.WriteLine("表 test 已存在数据!");
                     }
                     #endregion
 
-                    Console.WriteLine("表创建完成!");
+                    Console.WriteLine();
+                    Console.WriteLine("数据初始化完成!");
                     Console.WriteLine();
                 }
 
