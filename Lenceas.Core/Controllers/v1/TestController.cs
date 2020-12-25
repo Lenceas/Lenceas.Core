@@ -4,7 +4,6 @@ using Lenceas.Core.Model;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using static Lenceas.Core.Extensions.CustomApiVersion;
 
@@ -31,7 +30,7 @@ namespace Lenceas.Core.Controllers
 
         #region CRUD
         /// <summary>
-        /// 分页获取数据
+        /// 分页
         /// </summary>
         /// <param name="pageIndex">当前页数</param>
         /// <param name="pageSize">分页大小</param>
@@ -47,7 +46,6 @@ namespace Lenceas.Core.Controllers
             }
             catch (Exception ex)
             {
-                r.success = false;
                 r.status = 500;
                 r.msg = ex.Message;
             }
@@ -55,7 +53,7 @@ namespace Lenceas.Core.Controllers
         }
 
         /// <summary>
-        /// 查询列表
+        /// 列表
         /// </summary>
         /// <returns></returns>
         [HttpGet("GetList")]
@@ -69,7 +67,6 @@ namespace Lenceas.Core.Controllers
             }
             catch (Exception ex)
             {
-                r.success = false;
                 r.status = 500;
                 r.msg = ex.Message;
             }
@@ -77,7 +74,7 @@ namespace Lenceas.Core.Controllers
         }
 
         /// <summary>
-        /// 查询单条
+        /// 详情
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -95,12 +92,12 @@ namespace Lenceas.Core.Controllers
                 }
                 else
                 {
+                    r.status = 404;
                     r.msg = "未匹配到数据";
                 }
             }
             catch (Exception ex)
             {
-                r.success = false;
                 r.status = 500;
                 r.msg = ex.Message;
             }
@@ -108,7 +105,7 @@ namespace Lenceas.Core.Controllers
         }
 
         /// <summary>
-        /// 增加
+        /// 添加
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -118,13 +115,11 @@ namespace Lenceas.Core.Controllers
             var r = new ApiResult<string>();
             try
             {
-                var entity = new Test(model.Name);
-                r.success = await _testServices.AddAsync(entity) > 0;
-                r.msg = r.success ? "添加成功" : "添加失败";
+                r.status = await _testServices.AddAsync(new Test(model.Name)) > 0 ? 200 : 400;
+                r.msg = r.status == 200 ? "添加成功" : "添加失败";
             }
             catch (Exception ex)
             {
-                r.success = false;
                 r.status = 500;
                 r.msg = ex.Message;
             }
@@ -143,23 +138,24 @@ namespace Lenceas.Core.Controllers
             var r = new ApiResult<string>();
             if (!id.Equals(model.Id))
             {
+                r.status = 400;
                 r.msg = "传入Id与实体Id不一致";
                 return r;
             }
             var isExist = await _testServices.IsExist(id);
             if (!isExist)
             {
+                r.status = 404;
                 r.msg = "未匹配到数据";
                 return r;
             }
             try
             {
-                r.success = await _testServices.UpdateAsync(t => t.Id == id, t => new Test() { Name = model.Name }) == 0;
-                r.msg = r.success ? "更新成功" : "更新失败";
+                r.status = await _testServices.UpdateAsync(t => t.Id == id, t => new Test() { Name = model.Name }) == 0 ? 200 : 400;
+                r.msg = r.status == 200 ? "更新成功" : "更新失败";
             }
             catch (Exception ex)
             {
-                r.success = false;
                 r.status = 500;
                 r.msg = ex.Message;
             }
@@ -175,23 +171,22 @@ namespace Lenceas.Core.Controllers
         public async Task<ApiResult<string>> Delete(long id)
         {
             var r = new ApiResult<string>();
-            var isExist = await _testServices.IsExist(id);
             try
             {
+                var isExist = await _testServices.IsExist(id);
                 if (isExist)
                 {
-                    r.success = await _testServices.DeleteById(id) > 0;
-                    r.msg = r.success ? "删除成功" : "删除失败";
+                    r.status = await _testServices.DeleteById(id) > 0 ? 200 : 400;
+                    r.msg = r.status == 200 ? "删除成功" : "删除失败";
                 }
                 else
                 {
+                    r.status = 400;
                     r.msg = "未匹配到数据";
-                    r.success = false;
                 }
             }
             catch (Exception ex)
             {
-                r.success = false;
                 r.status = 500;
                 r.msg = ex.Message;
             }

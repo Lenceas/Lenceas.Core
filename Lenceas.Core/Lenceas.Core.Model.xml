@@ -14,11 +14,6 @@
             状态码
             </summary>
         </member>
-        <member name="P:Lenceas.Core.Model.ApiResult`1.success">
-            <summary>
-            操作是否成功
-            </summary>
-        </member>
         <member name="P:Lenceas.Core.Model.ApiResult`1.msg">
             <summary>
             返回信息
