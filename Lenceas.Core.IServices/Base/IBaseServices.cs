@@ -14,8 +14,8 @@ namespace Lenceas.Core.IServices
         #endregion
 
         #region 分页查询
-        Task<PageDataSet<T>> GetPage(int pageIndex, int pageSize);
-        Task<PageDataSet<T>> GetPage(int pageIndex, int pageSize, Expression<Func<T, bool>> whereLambda);
+        Task<List<T>> GetPage(int pageIndex, int pageSize);
+        Task<List<T>> GetPage(int pageIndex, int pageSize, Expression<Func<T, bool>> whereLambda);
         #endregion
 
         #region 查询

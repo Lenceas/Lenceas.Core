@@ -104,7 +104,7 @@ namespace Lenceas.Core.Model
         /// <summary>
         /// 返回数据
         /// </summary>
-        public IEnumerable<T> ViewModelList { get; set; }
+        public IList<T> ViewModelList { get; set; }
         #endregion
     }
 }

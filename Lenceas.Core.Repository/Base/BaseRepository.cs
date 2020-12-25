@@ -35,20 +35,16 @@ namespace Lenceas.Core.Repository
         #endregion
 
         #region 分页查询
-        public async Task<PageDataSet<T>> GetPage(int pageIndex, int pageSize)
+        public async Task<List<T>> GetPage(int pageIndex, int pageSize)
         {
             var entities = await this.GetList();
-            var totalRecords = entities.Count;
-            var items = entities.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
-            return new PageDataSet<T>(items, totalRecords, pageIndex, pageSize);
+            return entities.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
         }
 
-        public async Task<PageDataSet<T>> GetPage(int pageIndex, int pageSize, Expression<Func<T, bool>> whereLambda)
+        public async Task<List<T>> GetPage(int pageIndex, int pageSize, Expression<Func<T, bool>> whereLambda)
         {
             var entities = await this.GetList(whereLambda);
-            var totalRecords = entities.Count;
-            var items = entities.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
-            return new PageDataSet<T>(items, totalRecords, pageIndex, pageSize);
+            return entities.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
         }
 
         #endregion

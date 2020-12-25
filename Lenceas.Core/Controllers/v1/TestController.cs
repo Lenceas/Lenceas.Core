@@ -37,29 +37,13 @@ namespace Lenceas.Core.Controllers
         /// <param name="pageSize">分页大小</param>
         /// <returns></returns>
         [HttpGet("GetPage")]
-        public async Task<ApiResult<PageDataSet<TestViewModels>>> GetPage(int? pageIndex, int? pageSize)
+        public async Task<ApiResult<PageViewModels<TestViewModels>>> GetPage(int pageIndex = 1, int pageSize = 10)
         {
-            var r = new ApiResult<PageDataSet<TestViewModels>>();
-            if (pageIndex <= 0 || pageSize <= 0)
-            {
-                r.msg = "pageIndex或pageSize不能小于等于0！";
-                return r;
-            }
+            var r = new ApiResult<PageViewModels<TestViewModels>>();
             try
             {
-                var pageDataSet = await _testServices.GetPage(pageIndex ?? 1, pageSize ?? 10);
-                var data = new PageDataSet<TestViewModels>()
-                {
-                    PageIndex = pageDataSet.PageIndex,
-                    PageSize = pageDataSet.PageSize,
-                    TotalPages = pageDataSet.TotalPages,
-                    TotalRecords = pageDataSet.TotalRecords,
-                    HasPreviousPage = pageDataSet.HasPreviousPage,
-                    HasNextPage = pageDataSet.HasNextPage,
-                    ViewModelList = _mapper.Map<IEnumerable<TestViewModels>>(pageDataSet.ViewModelList)
-                };
                 r.msg = "查询成功";
-                r.data = data;
+                r.data = _mapper.Map<List<TestViewModels>>(await _testServices.GetPage(pageIndex, pageSize)).AsPageViewModel(pageIndex, pageSize);
             }
             catch (Exception ex)
             {

@@ -9,7 +9,7 @@
             测试接口
             </summary>
         </member>
-        <member name="M:Lenceas.Core.Controllers.TestController.GetPage(System.Nullable{System.Int32},System.Nullable{System.Int32})">
+        <member name="M:Lenceas.Core.Controllers.TestController.GetPage(System.Int32,System.Int32)">
             <summary>
             分页获取数据
             </summary>

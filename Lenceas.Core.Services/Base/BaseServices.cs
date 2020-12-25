@@ -30,12 +30,12 @@ namespace Lenceas.Core.Services
         #endregion
 
         #region 分页查询
-        public async Task<PageDataSet<T>> GetPage(int pageIndex, int pageSize)
+        public async Task<List<T>> GetPage(int pageIndex, int pageSize)
         {
             return await BaseDal.GetPage(pageIndex, pageSize);
         }
 
-        public async Task<PageDataSet<T>> GetPage(int pageIndex, int pageSize, Expression<Func<T, bool>> whereLambda)
+        public async Task<List<T>> GetPage(int pageIndex, int pageSize, Expression<Func<T, bool>> whereLambda)
         {
             return await BaseDal.GetPage(pageIndex, pageSize, whereLambda);
         }
