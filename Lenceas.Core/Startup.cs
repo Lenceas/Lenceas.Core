@@ -70,7 +70,7 @@ namespace Lenceas.Core
             // 封装Swagger展示
             app.UseSwaggerMildd();
             // Https
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             // 路由
             app.UseRouting();
             // 授权

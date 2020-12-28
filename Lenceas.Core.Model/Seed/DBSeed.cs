@@ -27,6 +27,9 @@ namespace Lenceas.Core.Model
                     throw new Exception("获取wwwroot路径时，异常！");
                 }
 
+                Console.WriteLine();
+                Console.WriteLine($"WebRootPath:{WebRootPath}");
+                Console.WriteLine();
                 Console.WriteLine("************ 开始自动初始化数据 *****************");
                 Console.WriteLine();
 
@@ -40,6 +43,7 @@ namespace Lenceas.Core.Model
                 }
 
                 Console.WriteLine("开始初始化数据...");
+                Console.WriteLine();
 
                 if (AppSettings.app(new string[] { "AppSettings", "SeedDBData" }).ObjToBool())
                 {
