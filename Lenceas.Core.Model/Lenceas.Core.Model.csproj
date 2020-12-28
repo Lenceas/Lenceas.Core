@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -12,19 +12,25 @@
   <ItemGroup>
     <Compile Remove="Migrations\20201119100300_InitDataBase.cs" />
     <Compile Remove="Migrations\20201119100300_InitDataBase.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.8">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.2.4" />
-    <PackageReference Include="Z.EntityFramework.Plus.EFCore" Version="3.1.6" />
+    <Compile Remove="Migrations\20201119100352_InitDataBase.cs" />
+    <Compile Remove="Migrations\20201119100352_InitDataBase.Designer.cs" />
+    <Compile Remove="Migrations\20201228013855_InitDataBase.cs" />
+    <Compile Remove="Migrations\20201228013855_InitDataBase.Designer.cs" />
+    <Compile Remove="Migrations\20201228015145_InitDataBase.cs" />
+    <Compile Remove="Migrations\20201228015145_InitDataBase.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\LJS.Core.Common\Lenceas.Core.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="5.0.0-alpha.2" />
+    <PackageReference Include="Z.EntityFramework.Plus.EFCore" Version="5.1.8" />
   </ItemGroup>
 
 </Project>

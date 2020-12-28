@@ -17,7 +17,7 @@ namespace Lenceas.Core.Model
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var mysql = DifDBConnOfSecurity(@"D:\my-file\mysql_Conn.txt", @"c:\my-file\mysql_Conn.txt");
-            optionsBuilder.UseMySql(mysql);
+            optionsBuilder.UseMySql(mysql, ServerVersion.FromString("5.0.0"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -14,8 +14,8 @@ namespace Lenceas.Core.Model.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.8")
-                .HasAnnotation("Relational:MaxIdentifierLength", 64);
+                .HasAnnotation("Relational:MaxIdentifierLength", 64)
+                .HasAnnotation("ProductVersion", "5.0.0");
 
             modelBuilder.Entity("Lenceas.Core.Model.Test", b =>
                 {
@@ -24,15 +24,16 @@ namespace Lenceas.Core.Model.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreateTime")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("datetime");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id")
                         .HasName("PRIMARY");
 
-                    b.ToTable("Test");
+                    b.ToTable("test");
                 });
 #pragma warning restore 612, 618
         }
