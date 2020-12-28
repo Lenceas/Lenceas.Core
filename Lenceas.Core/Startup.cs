@@ -28,9 +28,12 @@ namespace Lenceas.Core
         {
             services.AddSingleton(new AppSettings(Configuration));
 
+            services.AddMemoryCacheSetup();
             services.AddDbSetup();
             services.AddAutoMapperSetup();
+            services.AddMiniProfilerSetup();
             services.AddSwaggerSetup();
+            services.AddHttpContextSetup();
 
             services.AddControllers()
                 .AddNewtonsoftJson(options =>
@@ -69,12 +72,16 @@ namespace Lenceas.Core
             }
             // 封装Swagger展示
             app.UseSwaggerMildd();
-            // Https
+            // 跳转https
             //app.UseHttpsRedirection();
+            // 使用静态文件
+            app.UseStaticFiles();
             // 路由
             app.UseRouting();
             // 授权
             app.UseAuthorization();
+            // 性能分析
+            app.UseMiniProfiler();
             // 终结点
             app.UseEndpoints(endpoints =>
             {

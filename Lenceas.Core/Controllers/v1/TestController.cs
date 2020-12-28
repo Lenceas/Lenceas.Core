@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Lenceas.Core.IServices;
 using Lenceas.Core.Model;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using StackExchange.Profiling;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -20,11 +22,13 @@ namespace Lenceas.Core.Controllers
         #region 构造函数
         private readonly ITestServices _testServices;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _accessor;
 
-        public TestController(ITestServices testServices, IMapper mapper)
+        public TestController(ITestServices testServices, IMapper mapper, IHttpContextAccessor accessor)
         {
             _testServices = testServices;
             _mapper = mapper;
+            _accessor = accessor;
         }
         #endregion
 
@@ -184,6 +188,28 @@ namespace Lenceas.Core.Controllers
                     r.status = 400;
                     r.msg = "未匹配到数据";
                 }
+            }
+            catch (Exception ex)
+            {
+                r.status = 500;
+                r.msg = ex.Message;
+            }
+            return r;
+        }
+
+        /// <summary>
+        /// 获取 MiniProfiler Html
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetMiniProfilerHtml")]
+        public ApiResult<string> GetMiniProfilerHtml()
+        {
+            var r = new ApiResult<string>();
+            try
+            {
+                r.status = 200;
+                r.msg = "查询成功";
+                r.data = MiniProfiler.Current.RenderIncludes(_accessor.HttpContext).ToString();
             }
             catch (Exception ex)
             {

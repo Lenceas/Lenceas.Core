@@ -24,6 +24,21 @@ namespace Lenceas.Core.Extensions
                     c.SwaggerEndpoint($"/swagger/{version}/swagger.json", $"{ApiName} {version}");
                 });
                 c.RoutePrefix = "";
+                c.HeadContent = @$"<script async='async' 
+                    id='mini-profiler' 
+                    src='/profiler/includes.min.js?v=4.2.22+4563a9e1ab' 
+                    data-version='4.2.22+4563a9e1ab' 
+                    data-path='/profiler/'
+                    data-current-id='59e91ce8-3995-4c36-8a8c-a91f552259d1' 
+                    data-ids='59e91ce8-3995-4c36-8a8c-a91f552259d1' 
+                    data-position='Left'
+                    data-scheme='Light''
+                    data-authorized='true' 
+                    data-max-traces='5' 
+                    data-toggle-shortcut='Alt+P'
+                    data-trivial-milliseconds='2.0' 
+                    data-ignored-duplicate-execute-types='Open,OpenAsync,Close,CloseAsync'>
+                </script>";
             });
         }
     }
