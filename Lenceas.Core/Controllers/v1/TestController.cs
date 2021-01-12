@@ -3,6 +3,7 @@ using Lenceas.Core.IServices;
 using Lenceas.Core.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using StackExchange.Profiling;
 using System;
 using System.Collections.Generic;
@@ -23,12 +24,14 @@ namespace Lenceas.Core.Controllers
         private readonly ITestServices _testServices;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _accessor;
+        private readonly IMemoryCache _memoryCache;
 
-        public TestController(ITestServices testServices, IMapper mapper, IHttpContextAccessor accessor)
+        public TestController(ITestServices testServices, IMapper mapper, IHttpContextAccessor accessor, IMemoryCache memoryCache)
         {
             _testServices = testServices;
             _mapper = mapper;
             _accessor = accessor;
+            _memoryCache = memoryCache;
         }
         #endregion
 
@@ -219,5 +222,36 @@ namespace Lenceas.Core.Controllers
             return r;
         }
         #endregion
+
+        /// <summary>
+        /// 测试-MemoryCache
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("TestMemoryCache")]
+        public ApiResult<string> TestMemoryCache()
+        {
+            var r = new ApiResult<string>();
+            try
+            {
+                r.status = 200;
+                r.msg = "查询成功";
+                string key = "Test-MemoryCache";
+                if (_memoryCache.TryGetValue(key, out string time))
+                {
+                    r.data = time;
+                }
+                else
+                {
+                    r.data = time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss fff");
+                    _memoryCache.Set(key, time, TimeSpan.FromSeconds(5));
+                }
+            }
+            catch (Exception ex)
+            {
+                r.status = 500;
+                r.msg = ex.Message;
+            }
+            return r;
+        }
     }
 }

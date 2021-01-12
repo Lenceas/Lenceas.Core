@@ -19,4 +19,8 @@
     <ProjectReference Include="..\Lenceas.Core.Services\Lenceas.Core.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="AOP\" />
+  </ItemGroup>
+
 </Project>
