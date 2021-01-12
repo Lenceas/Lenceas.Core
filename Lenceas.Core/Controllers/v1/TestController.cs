@@ -3,6 +3,7 @@ using Lenceas.Core.IServices;
 using Lenceas.Core.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using StackExchange.Profiling;
 using System;
@@ -25,13 +26,15 @@ namespace Lenceas.Core.Controllers
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _accessor;
         private readonly IMemoryCache _memoryCache;
+        private readonly IDistributedCache _cache;
 
-        public TestController(ITestServices testServices, IMapper mapper, IHttpContextAccessor accessor, IMemoryCache memoryCache)
+        public TestController(ITestServices testServices, IMapper mapper, IHttpContextAccessor accessor, IMemoryCache memoryCache, IDistributedCache cache)
         {
             _testServices = testServices;
             _mapper = mapper;
             _accessor = accessor;
             _memoryCache = memoryCache;
+            _cache = cache;
         }
         #endregion
 
@@ -245,6 +248,38 @@ namespace Lenceas.Core.Controllers
                     r.data = time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss fff");
                     _memoryCache.Set(key, time, TimeSpan.FromSeconds(5));
                 }
+            }
+            catch (Exception ex)
+            {
+                r.status = 500;
+                r.msg = ex.Message;
+            }
+            return r;
+        }
+
+        /// <summary>
+        /// 测试-Redis
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("TestRedis")]
+        public ApiResult<string> TestRedis()
+        {
+            var r = new ApiResult<string>();
+            try
+            {
+                r.status = 200;
+                r.msg = "查询成功";
+                string key = "Test-Redis";
+                var time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss fff");
+                if (!string.IsNullOrEmpty(_cache.GetString(key)))
+                {
+                    time = _cache.GetString(key);
+                }
+                else
+                {
+                    _cache.SetString(key, time, new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(5) });
+                }
+                r.data = time;
             }
             catch (Exception ex)
             {

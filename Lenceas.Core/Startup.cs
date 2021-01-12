@@ -29,6 +29,11 @@ namespace Lenceas.Core
             services.AddSingleton(new AppSettings(Configuration));
 
             services.AddMemoryCacheSetup();
+            services.AddDistributedRedisCache(options =>
+            {
+                options.Configuration = AppSettings.app(new string[] { "Redis", "ConnectionString" }).ToString();
+                options.InstanceName = "RedisDistributedCache";
+            });
             services.AddDbSetup();
             services.AddAutoMapperSetup();
             services.AddMiniProfilerSetup();

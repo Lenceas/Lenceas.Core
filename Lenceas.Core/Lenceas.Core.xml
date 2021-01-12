@@ -64,6 +64,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:Lenceas.Core.Controllers.TestController.TestRedis">
+            <summary>
+            测试-Redis
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Lenceas.Core.CustomRouteAttribute">
             <summary>
             自定义路由 /api/{version}/[controler]/[action]
