@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Lenceas.Core.Common;
 using Lenceas.Core.IServices;
 using Lenceas.Core.Model;
 using Microsoft.AspNetCore.Http;

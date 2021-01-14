@@ -1,10 +1,10 @@
 ﻿using Lenceas.Core.IServices;
-using Lenceas.Core.Model;
 using Lenceas.Core.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Lenceas.Core.Common;
 
 namespace Lenceas.Core.Services
 {
@@ -57,6 +57,7 @@ namespace Lenceas.Core.Services
             return await BaseDal.GetEntity(whereLambda);
         }
 
+        [Caching(AbsoluteExpiration = 1)]
         public async Task<List<T>> GetList()
         {
             return await BaseDal.GetList();
