@@ -4,6 +4,11 @@
         <name>Lenceas.Core</name>
     </assembly>
     <members>
+        <member name="T:Lenceas.Core.Controllers.AuthController">
+            <summary>
+            权限相关接口
+            </summary>
+        </member>
         <member name="M:Lenceas.Core.Controllers.AuthController.GetJwtToken(System.String,System.String)">
             <summary>
             获取JWT的方法
