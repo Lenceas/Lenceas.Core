@@ -11,6 +11,9 @@ using static Lenceas.Core.Extensions.CustomApiVersion;
 
 namespace Lenceas.Core.Controllers
 {
+    /// <summary>
+    /// 权限相关接口
+    /// </summary>
     [ApiController]
     [Produces("application/json")]
     [CustomRoute(ApiVersions.v1)]
