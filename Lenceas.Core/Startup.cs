@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Lenceas.Core
 {
@@ -28,6 +29,9 @@ namespace Lenceas.Core
         {
             services.AddSingleton(new AppSettings(Configuration));
 
+            // 确保从认证中心返回的ClaimType不被更改，不使用Map映射
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
             services.AddMemoryCacheSetup();
             services.AddDistributedRedisCache(options =>
             {
@@ -39,7 +43,7 @@ namespace Lenceas.Core
             services.AddMiniProfilerSetup();
             services.AddSwaggerSetup();
             services.AddHttpContextSetup();
-
+            services.AddAuthorizationSetup();
             services.AddControllers()
                 .AddNewtonsoftJson(options =>
                 {
@@ -83,6 +87,8 @@ namespace Lenceas.Core
             app.UseStaticFiles();
             // 路由
             app.UseRouting();
+            // 认证
+            app.UseAuthentication();
             // 授权
             app.UseAuthorization();
             // 性能分析

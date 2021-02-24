@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using Lenceas.Core.Common;
 using Lenceas.Core.IServices;
 using Lenceas.Core.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
@@ -20,6 +20,7 @@ namespace Lenceas.Core.Controllers
     [ApiController]
     [Produces("application/json")]
     [CustomRoute(ApiVersions.v1)]
+    [Authorize]
     public class TestController : ControllerBase
     {
         #region 构造函数
@@ -47,6 +48,7 @@ namespace Lenceas.Core.Controllers
         /// <param name="pageSize">分页大小</param>
         /// <returns></returns>
         [HttpGet("GetPage")]
+        [AllowAnonymous]
         public async Task<ApiResult<PageViewModels<TestViewModels>>> GetPage(int pageIndex = 1, int pageSize = 10)
         {
             var r = new ApiResult<PageViewModels<TestViewModels>>();
@@ -68,6 +70,7 @@ namespace Lenceas.Core.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("GetList")]
+        [AllowAnonymous]
         public async Task<ApiResult<List<TestViewModels>>> GetList()
         {
             var r = new ApiResult<List<TestViewModels>>();
@@ -90,6 +93,7 @@ namespace Lenceas.Core.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ApiResult<TestViewModels>> GetById(long id)
         {
             var r = new ApiResult<TestViewModels>();
@@ -209,6 +213,7 @@ namespace Lenceas.Core.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("GetMiniProfilerHtml")]
+        [AllowAnonymous]
         public ApiResult<string> GetMiniProfilerHtml()
         {
             var r = new ApiResult<string>();
@@ -232,6 +237,7 @@ namespace Lenceas.Core.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("TestMemoryCache")]
+        [AllowAnonymous]
         public ApiResult<string> TestMemoryCache()
         {
             var r = new ApiResult<string>();
@@ -263,6 +269,7 @@ namespace Lenceas.Core.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("TestRedis")]
+        [AllowAnonymous]
         public ApiResult<string> TestRedis()
         {
             var r = new ApiResult<string>();

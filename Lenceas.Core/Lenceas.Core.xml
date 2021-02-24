@@ -4,6 +4,14 @@
         <name>Lenceas.Core</name>
     </assembly>
     <members>
+        <member name="M:Lenceas.Core.Controllers.AuthController.GetJwtToken(System.String,System.String)">
+            <summary>
+            获取JWT的方法
+            </summary>
+            <param name="name"></param>
+            <param name="pwd"></param>
+            <returns></returns>
+        </member>
         <member name="T:Lenceas.Core.Controllers.TestController">
             <summary>
             测试接口
