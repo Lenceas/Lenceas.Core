@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Lenceas.Core.Model
 {
     /// <summary>
-    /// 管理员类
+    /// 系统管理员类
     /// </summary>
     public class Administrator : BaseEntity
     {

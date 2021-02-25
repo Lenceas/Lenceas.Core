@@ -15,7 +15,7 @@ using static Lenceas.Core.Extensions.CustomApiVersion;
 namespace Lenceas.Core.Controllers
 {
     /// <summary>
-    /// 管理员接口
+    /// 系统管理员接口
     /// </summary>
     [ApiController]
     [Produces("application/json")]

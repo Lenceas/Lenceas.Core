@@ -24,9 +24,44 @@
             返回数据集合
             </summary>
         </member>
+        <member name="T:Lenceas.Core.Model.BaseEntity">
+            <summary>
+            基础Model
+            </summary>
+        </member>
         <member name="P:Lenceas.Core.Model.BaseEntity.Id">
             <summary>
             主键
+            </summary>
+        </member>
+        <member name="P:Lenceas.Core.Model.BaseEntity.CreateTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:Lenceas.Core.Model.BaseEntity.UpdateTime">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="T:Lenceas.Core.Model.Administrator">
+            <summary>
+            管理员类
+            </summary>
+        </member>
+        <member name="P:Lenceas.Core.Model.Administrator.Account">
+            <summary>
+            账号
+            </summary>
+        </member>
+        <member name="P:Lenceas.Core.Model.Administrator.Password">
+            <summary>
+            密码
+            </summary>
+        </member>
+        <member name="P:Lenceas.Core.Model.Administrator.Email">
+            <summary>
+            邮箱
             </summary>
         </member>
         <member name="T:Lenceas.Core.Model.Test">
@@ -37,11 +72,6 @@
         <member name="P:Lenceas.Core.Model.Test.Name">
             <summary>
             名称
-            </summary>
-        </member>
-        <member name="P:Lenceas.Core.Model.Test.CreateTime">
-            <summary>
-            创建时间
             </summary>
         </member>
         <member name="T:Lenceas.Core.Model.PageDataSet`1">
@@ -92,6 +122,31 @@
             <param name="mySqlContext"></param>
             <param name="WebRootPath"></param>
             <returns></returns>
+        </member>
+        <member name="T:Lenceas.Core.Model.AdministratorViewModels">
+            <summary>
+            管理员信息展示类
+            </summary>
+        </member>
+        <member name="P:Lenceas.Core.Model.AdministratorViewModels.Id">
+            <summary>
+            主键
+            </summary>
+        </member>
+        <member name="P:Lenceas.Core.Model.AdministratorViewModels.Account">
+            <summary>
+            账号 
+            </summary>
+        </member>
+        <member name="P:Lenceas.Core.Model.AdministratorViewModels.Password">
+            <summary>
+            密码
+            </summary>
+        </member>
+        <member name="P:Lenceas.Core.Model.AdministratorViewModels.Email">
+            <summary>
+            邮箱
+            </summary>
         </member>
         <member name="T:Lenceas.Core.Model.TestViewModels">
             <summary>

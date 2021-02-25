@@ -4,6 +4,54 @@
         <name>Lenceas.Core</name>
     </assembly>
     <members>
+        <member name="T:Lenceas.Core.Controllers.AdministratorController">
+            <summary>
+            管理员接口
+            </summary>
+        </member>
+        <member name="M:Lenceas.Core.Controllers.AdministratorController.GetPage(System.Int32,System.Int32)">
+            <summary>
+            分页
+            </summary>
+            <param name="pageIndex">当前页数</param>
+            <param name="pageSize">分页大小</param>
+            <returns></returns>
+        </member>
+        <member name="M:Lenceas.Core.Controllers.AdministratorController.GetList">
+            <summary>
+            列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Lenceas.Core.Controllers.AdministratorController.GetById(System.Int64)">
+            <summary>
+            详情
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Lenceas.Core.Controllers.AdministratorController.Add(Lenceas.Core.Model.AdministratorViewModels)">
+            <summary>
+            添加
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Lenceas.Core.Controllers.AdministratorController.Update(System.Int64,Lenceas.Core.Model.AdministratorViewModels)">
+            <summary>
+            更新
+            </summary>
+            <param name="id"></param>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Lenceas.Core.Controllers.AdministratorController.Delete(System.Int64)">
+            <summary>
+            删除
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="T:Lenceas.Core.Controllers.AuthController">
             <summary>
             权限相关接口

@@ -1,7 +1,7 @@
 ﻿namespace Lenceas.Core.Model
 {
     /// <summary>
-    /// 管理员信息展示类
+    /// 系统管理员信息展示类
     /// </summary>
     public class AdministratorViewModels
     {
