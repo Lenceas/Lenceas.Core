@@ -47,7 +47,6 @@ namespace Lenceas.Core.Controllers
         /// <param name="pageSize">分页大小</param>
         /// <returns></returns>
         [HttpGet("GetPage")]
-        [AllowAnonymous]
         public async Task<ApiResult<PageViewModels<AdministratorViewModels>>> GetPage(int pageIndex = 1, int pageSize = 10)
         {
             var r = new ApiResult<PageViewModels<AdministratorViewModels>>();
@@ -69,7 +68,6 @@ namespace Lenceas.Core.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("GetList")]
-        [AllowAnonymous]
         public async Task<ApiResult<List<AdministratorViewModels>>> GetList()
         {
             var r = new ApiResult<List<AdministratorViewModels>>();
@@ -92,7 +90,6 @@ namespace Lenceas.Core.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        [AllowAnonymous]
         public async Task<ApiResult<AdministratorViewModels>> GetById(long id)
         {
             var r = new ApiResult<AdministratorViewModels>();
