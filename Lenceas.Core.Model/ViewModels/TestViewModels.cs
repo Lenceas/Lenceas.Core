@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Lenceas.Core.Model
+﻿namespace Lenceas.Core.Model
 {
     /// <summary>
     /// 测试信息展示类

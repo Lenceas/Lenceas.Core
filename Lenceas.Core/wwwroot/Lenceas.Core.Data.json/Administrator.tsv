@@ -1,13 +1,17 @@
 [
   {
     "Id": 1,
-    "Name": "测试数据-1",
+    "Account": "system",
+    "Password": "E10ADC3949BA59ABBE56E057F20F883E",
+    "Email": "2923280915@qq.com",
     "CreateTime": "\/Date(1604674711000+0800)\/",
     "UpdateTime": "\/Date(1604674711000+0800)\/"
   },
   {
     "Id": 2,
-    "Name": "测试数据-2",
+    "Account": "admin",
+    "Password": "E10ADC3949BA59ABBE56E057F20F883E",
+    "Email": "2923280915@qq.com",
     "CreateTime": "\/Date(1604674711000+0800)\/",
     "UpdateTime": "\/Date(1604674711000+0800)\/"
   }

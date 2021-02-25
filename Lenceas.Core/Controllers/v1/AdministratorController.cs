@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Lenceas.Core.Common;
 using Lenceas.Core.IServices;
 using Lenceas.Core.Model;
 using Microsoft.AspNetCore.Authorization;
@@ -6,7 +7,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
-using StackExchange.Profiling;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -15,24 +15,23 @@ using static Lenceas.Core.Extensions.CustomApiVersion;
 namespace Lenceas.Core.Controllers
 {
     /// <summary>
-    /// 测试接口
+    /// 管理员接口
     /// </summary>
     [ApiController]
     [Produces("application/json")]
     [CustomRoute(ApiVersions.v1)]
     [Authorize]
-    public class TestController : ControllerBase
+    public class AdministratorController : ControllerBase
     {
         #region 构造函数
-        private readonly ITestServices _testServices;
+        private readonly IAdministratorServices _administratorServices;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _accessor;
         private readonly IMemoryCache _memoryCache;
         private readonly IDistributedCache _cache;
-
-        public TestController(ITestServices testServices, IMapper mapper, IHttpContextAccessor accessor, IMemoryCache memoryCache, IDistributedCache cache)
+        public AdministratorController(IAdministratorServices administratorServices, IMapper mapper, IHttpContextAccessor accessor, IMemoryCache memoryCache, IDistributedCache cache)
         {
-            _testServices = testServices;
+            _administratorServices = administratorServices;
             _mapper = mapper;
             _accessor = accessor;
             _memoryCache = memoryCache;
@@ -49,13 +48,13 @@ namespace Lenceas.Core.Controllers
         /// <returns></returns>
         [HttpGet("GetPage")]
         [AllowAnonymous]
-        public async Task<ApiResult<PageViewModels<TestViewModels>>> GetPage(int pageIndex = 1, int pageSize = 10)
+        public async Task<ApiResult<PageViewModels<AdministratorViewModels>>> GetPage(int pageIndex = 1, int pageSize = 10)
         {
-            var r = new ApiResult<PageViewModels<TestViewModels>>();
+            var r = new ApiResult<PageViewModels<AdministratorViewModels>>();
             try
             {
                 r.msg = "查询成功";
-                r.data = _mapper.Map<List<TestViewModels>>(await _testServices.GetPage(pageIndex, pageSize)).AsPageViewModel(pageIndex, pageSize);
+                r.data = _mapper.Map<List<AdministratorViewModels>>(await _administratorServices.GetPage(pageIndex, pageSize)).AsPageViewModel(pageIndex, pageSize);
             }
             catch (Exception ex)
             {
@@ -71,13 +70,13 @@ namespace Lenceas.Core.Controllers
         /// <returns></returns>
         [HttpGet("GetList")]
         [AllowAnonymous]
-        public async Task<ApiResult<List<TestViewModels>>> GetList()
+        public async Task<ApiResult<List<AdministratorViewModels>>> GetList()
         {
-            var r = new ApiResult<List<TestViewModels>>();
+            var r = new ApiResult<List<AdministratorViewModels>>();
             try
             {
                 r.msg = "查询成功";
-                r.data = _mapper.Map<List<TestViewModels>>(await _testServices.GetList());
+                r.data = _mapper.Map<List<AdministratorViewModels>>(await _administratorServices.GetList());
             }
             catch (Exception ex)
             {
@@ -94,16 +93,16 @@ namespace Lenceas.Core.Controllers
         /// <returns></returns>
         [HttpGet("{id}")]
         [AllowAnonymous]
-        public async Task<ApiResult<TestViewModels>> GetById(long id)
+        public async Task<ApiResult<AdministratorViewModels>> GetById(long id)
         {
-            var r = new ApiResult<TestViewModels>();
+            var r = new ApiResult<AdministratorViewModels>();
             try
             {
-                var entity = await _testServices.GetById(id);
+                var entity = await _administratorServices.GetById(id);
                 if (entity != null)
                 {
                     r.msg = "查询成功";
-                    r.data = _mapper.Map<TestViewModels>(entity);
+                    r.data = _mapper.Map<AdministratorViewModels>(entity);
                 }
                 else
                 {
@@ -125,12 +124,19 @@ namespace Lenceas.Core.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ApiResult<string>> Add([FromBody] TestViewModels model)
+        public async Task<ApiResult<string>> Add([FromBody] AdministratorViewModels model)
         {
             var r = new ApiResult<string>();
+            var isNew = await _administratorServices.GetEntity(t => t.Account.Equals(model.Account)) == null;
+            if (!isNew)
+            {
+                r.status = 400;
+                r.msg = "账号已存在";
+                return r;
+            }
             try
             {
-                r.status = await _testServices.AddAsync(new Test(model.Name)) > 0 ? 200 : 400;
+                r.status = await _administratorServices.AddAsync(new Administrator(model.Account, MD5Helper.MD5Encrypt32(model.Password))) > 0 ? 200 : 400;
                 r.msg = r.status == 200 ? "添加成功" : "添加失败";
             }
             catch (Exception ex)
@@ -148,7 +154,7 @@ namespace Lenceas.Core.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<ApiResult<string>> Update(long id, [FromBody] TestViewModels model)
+        public async Task<ApiResult<string>> Update(long id, [FromBody] AdministratorViewModels model)
         {
             var r = new ApiResult<string>();
             if (!id.Equals(model.Id))
@@ -157,16 +163,23 @@ namespace Lenceas.Core.Controllers
                 r.msg = "传入Id与实体Id不一致";
                 return r;
             }
-            var isExist = await _testServices.IsExist(id);
+            var isExist = await _administratorServices.IsExist(id);
             if (!isExist)
             {
                 r.status = 404;
                 r.msg = "未匹配到数据";
                 return r;
             }
+            var isNew = await _administratorServices.GetEntity(t => t.Account.Equals(model.Account)) == null;
+            if (!isNew)
+            {
+                r.status = 400;
+                r.msg = "账号已存在";
+                return r;
+            }
             try
             {
-                r.status = await _testServices.UpdateAsync(t => t.Id == id, t => new Test() { Name = model.Name, UpdateTime = DateTime.Now.ToLocalTime() }) == 0 ? 200 : 400;
+                r.status = await _administratorServices.UpdateAsync(t => t.Id == id, t => new Administrator() { Account = model.Account, Password = MD5Helper.MD5Encrypt32(model.Password), UpdateTime = DateTime.Now.ToLocalTime() }) == 0 ? 200 : 400;
                 r.msg = r.status == 200 ? "更新成功" : "更新失败";
             }
             catch (Exception ex)
@@ -188,10 +201,10 @@ namespace Lenceas.Core.Controllers
             var r = new ApiResult<string>();
             try
             {
-                var isExist = await _testServices.IsExist(id);
+                var isExist = await _administratorServices.IsExist(id);
                 if (isExist)
                 {
-                    r.status = await _testServices.DeleteById(id) > 0 ? 200 : 400;
+                    r.status = await _administratorServices.DeleteById(id) > 0 ? 200 : 400;
                     r.msg = r.status == 200 ? "删除成功" : "删除失败";
                 }
                 else
@@ -208,93 +221,5 @@ namespace Lenceas.Core.Controllers
             return r;
         }
         #endregion
-
-        /// <summary>
-        /// 获取 MiniProfiler Html
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("GetMiniProfilerHtml")]
-        [AllowAnonymous]
-        public ApiResult<string> GetMiniProfilerHtml()
-        {
-            var r = new ApiResult<string>();
-            try
-            {
-                r.status = 200;
-                r.msg = "查询成功";
-                r.data = MiniProfiler.Current.RenderIncludes(_accessor.HttpContext).ToString();
-            }
-            catch (Exception ex)
-            {
-                r.status = 500;
-                r.msg = ex.Message;
-            }
-            return r;
-        }
-
-        /// <summary>
-        /// 测试-MemoryCache
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("TestMemoryCache")]
-        [AllowAnonymous]
-        public ApiResult<string> TestMemoryCache()
-        {
-            var r = new ApiResult<string>();
-            try
-            {
-                r.status = 200;
-                r.msg = "查询成功";
-                string key = "Test-MemoryCache";
-                if (_memoryCache.TryGetValue(key, out string time))
-                {
-                    r.data = time;
-                }
-                else
-                {
-                    r.data = time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss fff");
-                    _memoryCache.Set(key, time, TimeSpan.FromSeconds(5));
-                }
-            }
-            catch (Exception ex)
-            {
-                r.status = 500;
-                r.msg = ex.Message;
-            }
-            return r;
-        }
-
-        /// <summary>
-        /// 测试-Redis
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("TestRedis")]
-        [AllowAnonymous]
-        public ApiResult<string> TestRedis()
-        {
-            var r = new ApiResult<string>();
-            try
-            {
-                r.status = 200;
-                r.msg = "查询成功";
-                string key = "Test-Redis";
-                var time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss fff");
-                if (!string.IsNullOrEmpty(_cache.GetString(key)))
-                {
-                    time = _cache.GetString(key);
-                }
-                else
-                {
-                    _cache.SetString(key, time, new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(5) });
-                }
-                r.data = time;
-            }
-            catch (Exception ex)
-            {
-                r.status = 500;
-                r.msg = ex.Message;
-            }
-            return r;
-        }
     }
 }

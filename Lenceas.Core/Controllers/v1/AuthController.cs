@@ -1,4 +1,5 @@
 ﻿using Lenceas.Core.Common;
+using Lenceas.Core.IServices;
 using Lenceas.Core.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 using static Lenceas.Core.Extensions.CustomApiVersion;
 
 namespace Lenceas.Core.Controllers
@@ -20,10 +22,10 @@ namespace Lenceas.Core.Controllers
     public class AuthController : ControllerBase
     {
         #region 构造函数
-        private readonly IHttpContextAccessor _accessor;
-        public AuthController(IHttpContextAccessor accessor)
+        private readonly IAdministratorServices _administratorServices;
+        public AuthController(IAdministratorServices administratorServices)
         {
-            _accessor = accessor;
+            _administratorServices = administratorServices;
         }
         #endregion
 
@@ -35,7 +37,7 @@ namespace Lenceas.Core.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("GetJwtToken")]
-        public ApiResult<TokenInfoViewModel> GetJwtToken(string name = "", string pwd = "")
+        public async Task<ApiResult<TokenInfoViewModel>> GetJwtToken(string name = "", string pwd = "")
         {
             if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(pwd))
             {
@@ -45,11 +47,15 @@ namespace Lenceas.Core.Controllers
                     msg = "用户名或密码不能为空",
                 };
             }
-            //pass = MD5Helper.MD5Encrypt32(pass);
-            if (name.Equals("admin") && pwd.Equals("123456"))
+            var administrator = await _administratorServices.GetEntity(t => t.Account.Equals(name) && t.Password.Equals(MD5Helper.MD5Encrypt32(pwd)));
+            if (administrator != null)
             {
                 //创建声明数组
-                var claims = new Claim[] { new Claim(ClaimTypes.Name, name) };
+                var claims = new Claim[] {
+                    new Claim(ClaimTypes.Name,administrator.Account),
+                    new Claim(JwtRegisteredClaimNames.Email,administrator.Email),
+                    new Claim(JwtRegisteredClaimNames.Sub,administrator.Id.ToString())
+                    };
                 //读取配置文件
                 var symmetricKeyAsBase64 = AppSecretConfig.Audience_Secret_String;
                 var keyByteArray = Encoding.ASCII.GetBytes(symmetricKeyAsBase64);

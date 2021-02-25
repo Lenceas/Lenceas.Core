@@ -13,6 +13,7 @@ namespace Lenceas.Core.Model
         }
 
         public virtual DbSet<Test> test { get; set; }
+        public virtual DbSet<Administrator> administrator { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -23,6 +24,10 @@ namespace Lenceas.Core.Model
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Test>(entity =>
+            {
+                entity.HasKey(e => e.Id).HasName("PRIMARY");
+            });
+            modelBuilder.Entity<Administrator>(entity =>
             {
                 entity.HasKey(e => e.Id).HasName("PRIMARY");
             });

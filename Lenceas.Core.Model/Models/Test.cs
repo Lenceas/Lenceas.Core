@@ -10,30 +10,30 @@ namespace Lenceas.Core.Model
     /// </summary>
     public class Test : BaseEntity
     {
+        #region 构造函数
         public Test()
         {
             Name = string.Empty;
             CreateTime = DateTime.Now.ToLocalTime();
+            UpdateTime = DateTime.Now.ToLocalTime();
         }
 
         public Test(string name)
         {
             Name = name;
             CreateTime = DateTime.Now.ToLocalTime();
+            UpdateTime = DateTime.Now.ToLocalTime();
         }
+        #endregion
 
+        #region 属性
         /// <summary>
         /// 名称
         /// </summary>
         [Column(TypeName = "varchar(255)")]
+        [Description("名称")]
         [Required]
         public string Name { get; set; }
-
-        /// <summary>
-        /// 创建时间
-        /// </summary>
-        [Column(TypeName = "datetime")]
-        [Required]
-        public DateTime CreateTime { get; set; }
+        #endregion
     }
 }

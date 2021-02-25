@@ -12,6 +12,8 @@ namespace Lenceas.Core.Extensions.AutoMapper
         {
             CreateMap<Test, TestViewModels>();
             CreateMap<TestViewModels, Test>();
+            CreateMap<Administrator, AdministratorViewModels>();
+            CreateMap<AdministratorViewModels, Administrator>();
         }
     }
 }

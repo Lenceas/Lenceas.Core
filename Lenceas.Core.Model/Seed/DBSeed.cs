@@ -66,13 +66,26 @@ namespace Lenceas.Core.Model
                     #region test
                     if (!await mySqlContext.test.AnyAsync())
                     {
-                        await mySqlContext.test.AddRangeAsync(JsonHelper.ParseFormByJson<List<Test>>(FileHelper.ReadFile(string.Format(WebRootPath + SeedDataFolder, "test"), Encoding.UTF8)));
+                        await mySqlContext.test.AddRangeAsync(JsonHelper.ParseFormByJson<List<Test>>(FileHelper.ReadFile(string.Format(WebRootPath + SeedDataFolder, "Test"), Encoding.UTF8)));
                         await mySqlContext.SaveChangesAsync();
                         Console.WriteLine("表 test 数据初始化成功!");
                     }
                     else
                     {
                         Console.WriteLine("表 test 已存在数据!");
+                    }
+                    #endregion
+
+                    #region administrator
+                    if (!await mySqlContext.administrator.AnyAsync())
+                    {
+                        await mySqlContext.administrator.AddRangeAsync(JsonHelper.ParseFormByJson<List<Administrator>>(FileHelper.ReadFile(string.Format(WebRootPath + SeedDataFolder, "Administrator"), Encoding.UTF8)));
+                        await mySqlContext.SaveChangesAsync();
+                        Console.WriteLine("表 administrator 数据初始化成功!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("表 administrator 已存在数据!");
                     }
                     #endregion
 
