@@ -1,8 +1,10 @@
 ﻿using Lenceas.Core.Common;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Lenceas.Core.Extensions
 {
@@ -34,14 +36,25 @@ namespace Lenceas.Core.Extensions
                 ValidateAudience = true,
                 ValidAudience = Audience,
                 ValidateLifetime = true,
-                ClockSkew = TimeSpan.FromSeconds(60 * 60),
-                RequireExpirationTime = true
+                ClockSkew = TimeSpan.Zero
             };
 
-            services.AddAuthentication("Bearer")
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(o =>
                 {
                     o.TokenValidationParameters = tokenValidationParameters;
+                    o.Events = new JwtBearerEvents
+                    {
+                        OnAuthenticationFailed = context =>
+                        {
+                            // 如果过期，则把<是否过期>添加到，返回头信息中
+                            if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                            {
+                                context.Response.Headers.Add("Token-Expired", "true");
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
             #endregion
         }
