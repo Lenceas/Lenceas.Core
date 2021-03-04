@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Lenceas.Core.Model.Migrations
 {
     [DbContext(typeof(MySqlContext))]
-    [Migration("20201228020027_InitDataBase")]
+    [Migration("20210304032407_InitDataBase")]
     partial class InitDataBase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -17,7 +17,36 @@ namespace Lenceas.Core.Model.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 64)
-                .HasAnnotation("ProductVersion", "5.0.0");
+                .HasAnnotation("ProductVersion", "5.0.3");
+
+            modelBuilder.Entity("Lenceas.Core.Model.Administrator", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Account")
+                        .IsRequired()
+                        .HasColumnType("varchar(30)");
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<DateTime>("UpdateTime")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("Id")
+                        .HasName("PRIMARY");
+
+                    b.ToTable("administrator");
+                });
 
             modelBuilder.Entity("Lenceas.Core.Model.Test", b =>
                 {
@@ -31,6 +60,9 @@ namespace Lenceas.Core.Model.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("varchar(255)");
+
+                    b.Property<DateTime>("UpdateTime")
+                        .HasColumnType("datetime");
 
                     b.HasKey("Id")
                         .HasName("PRIMARY");
